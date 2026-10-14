@@ -34,7 +34,7 @@ Two scripts are provided:
   kernel driver already built (`build_drivers.sh -l -k <kernel build dir>`)
   and loaded.
 - `power-profiles-daemon` (`powerprofilesctl`) for the power-plan option
-  (combined script only). If unavailable, use `-w AsIs` to skip it.
+  (combined script only). If unavailable, use `-w as-is` to skip it.
 
 ### What's not in this repo
 
@@ -55,7 +55,7 @@ above.
 ./run_passmark_auto.sh -d Short -i 1
 
 # PassMark + EMON + SocWatch telemetry, high-performance power plan
-./run_combined_test.sh -d Short -i 1 -w HighPerformance
+./run_combined_test.sh -d Short -i 1 -w performance
 ```
 
 Common parameters:
@@ -71,13 +71,14 @@ Common parameters:
   normal operation SocWatch is stopped the moment the benchmark finishes via a
   graceful SIGINT; this cap only protects against a stuck/undetected PassMark
   process.
-- `-w, --power-plan <AsIs|Balanced|HighPerformance|PowerSaver>` (combined
-  script only, default `HighPerformance`): power profile to use **during** the
-  benchmark, via `power-profiles-daemon` (`performance`/`balanced`/
-  `power-saver` under the hood). The original profile is always restored
-  afterward (even on a mid-run error, via a `trap` safety net). `Balanced`
-  (the usual Linux default) throttles for power savings and can make
-  benchmark runs inconsistent run-to-run; `HighPerformance` removes that
+- `-w, --power-plan <as-is|balanced|performance|power-saver>` (combined
+  script only, default `performance`): power profile to use **during** the
+  benchmark, via `power-profiles-daemon` - the exact same names shown by
+  `powerprofilesctl list` on this machine, so there's no Windows-style
+  renaming to translate in your head. The original profile is always
+  restored afterward (even on a mid-run error, via a `trap` safety net).
+  `balanced` (the usual Linux default) throttles for power savings and can
+  make benchmark runs inconsistent run-to-run; `performance` removes that
   throttling.
 
 Results are written to a timestamped folder inside the project itself, e.g.

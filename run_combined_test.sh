@@ -36,7 +36,7 @@ PROCESSES="$(nproc --all)"
 SUITE="All"               # CPU | Memory | All
 CONFIRM=0                 # 0 = fully automatic, 1 = ask Y/N before running
 SOCWATCH_SAFETY_CAP=900   # seconds; hard ceiling only, not the expected run length
-POWER_PLAN="HighPerformance"  # AsIs | Balanced | HighPerformance | PowerSaver
+POWER_PLAN="performance"  # as-is | balanced | performance | power-saver (matches `powerprofilesctl`)
 
 EMON_EVENTS="INST_RETIRED.ANY, CPU_CLK_UNHALTED.REF_TSC, LONGEST_LAT_CACHE.MISS"
 SOCWATCH_FEATURES=(cpu-wakeup sys-memory cpu-freq uncore-freq cpu-ipc cache \
@@ -53,8 +53,9 @@ Options:
   -r, --suite <CPU|Memory|All>                  Suite to run (default: All)
   -c, --confirm                                  Ask Y/N before running (default: fully automatic)
   -s, --socwatch-safety-cap <seconds>           SocWatch safety ceiling (default: 900)
-  -w, --power-plan <AsIs|Balanced|HighPerformance|PowerSaver>
-                                                  Power profile during the benchmark (default: HighPerformance).
+  -w, --power-plan <as-is|balanced|performance|power-saver>
+                                                  Power profile during the benchmark (default: performance),
+                                                  i.e. the same names shown by \`powerprofilesctl list\`.
                                                   Original profile is always restored afterward, even on error.
   -h, --help                                    Show this help
 EOF
@@ -90,8 +91,8 @@ case "$SUITE" in
 esac
 
 case "$POWER_PLAN" in
-  AsIs|Balanced|HighPerformance|PowerSaver) ;;
-  *) echo "Invalid --power-plan: $POWER_PLAN (expected AsIs|Balanced|HighPerformance|PowerSaver)" >&2; exit 1 ;;
+  as-is|balanced|performance|power-saver) ;;
+  *) echo "Invalid --power-plan: $POWER_PLAN (expected as-is|balanced|performance|power-saver)" >&2; exit 1 ;;
 esac
 
 if [ ! -x "$PASSMARK_BIN" ]; then
@@ -136,19 +137,18 @@ fi
 
 # ---------------------------------------------------------------------------
 # Power plan handling (Linux equivalent of the Windows -PowerPlan option, via
-# power-profiles-daemon). "Balanced" (the usual Linux default, like Windows)
+# power-profiles-daemon). "balanced" (the usual Linux default, like Windows)
 # throttles for power savings and can make benchmark runs inconsistent
-# run-to-run; "HighPerformance" (-> "performance") removes that throttling.
-# The original profile is always restored afterward, even on a mid-run error,
-# via a trap - same safety net as the Windows script.
+# run-to-run; "performance" removes that throttling. The original profile is
+# always restored afterward, even on a mid-run error, via a trap - same
+# safety net as the Windows script.
 # ---------------------------------------------------------------------------
 ORIGINAL_PROFILE="$(powerprofilesctl get 2>/dev/null || true)"
-case "$POWER_PLAN" in
-  AsIs) TARGET_PROFILE="" ;;
-  Balanced) TARGET_PROFILE="balanced" ;;
-  HighPerformance) TARGET_PROFILE="performance" ;;
-  PowerSaver) TARGET_PROFILE="power-saver" ;;
-esac
+if [ "$POWER_PLAN" = "as-is" ]; then
+  TARGET_PROFILE=""
+else
+  TARGET_PROFILE="$POWER_PLAN"
+fi
 
 restore_power_plan() {
   if [ -n "$TARGET_PROFILE" ] && [ -n "$ORIGINAL_PROFILE" ]; then
@@ -162,7 +162,7 @@ restore_power_plan() {
 trap restore_power_plan EXIT
 
 if [ -n "$TARGET_PROFILE" ]; then
-  echo "[1/6] Setting power profile to $POWER_PLAN ($TARGET_PROFILE); original was: $ORIGINAL_PROFILE"
+  echo "[1/6] Setting power profile to $TARGET_PROFILE; original was: $ORIGINAL_PROFILE"
   sudo powerprofilesctl set "$TARGET_PROFILE"
 else
   echo "[1/6] Power profile left as-is ($ORIGINAL_PROFILE)."
