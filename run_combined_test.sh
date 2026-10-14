@@ -112,7 +112,6 @@ mkdir -p "$RESULTS_DIR" "$SOC_DIR"
 
 EMON_CSV="$RESULTS_DIR/emon.csv"
 SOC_PREFIX="$SOC_DIR/socwatch"
-PASSMARK_OUT="$RESULTS_DIR/PassMark_PerfRes.txt"
 SYSTEM_INFO="$RESULTS_DIR/system_info.txt"
 
 echo "============================================================"
@@ -219,14 +218,30 @@ echo "  EMON wrapper PID=$EMON_WRAPPER_PID  SocWatch wrapper PID=$SOC_WRAPPER_PI
 # ---------------------------------------------------------------------------
 # Step 3: run PassMark in the foreground - this IS the completion signal;
 # no dialog polling needed since the Linux binary just blocks until done.
+#
+# Run it under a real pseudo-terminal via `script`, not a plain pipe/tee.
+# PassMark only does its full final curses-style redraw (accurate per-test
+# values at fixed on-screen positions) when stdout is a real tty; redirecting
+# to a pipe truncates the captured output to the first iteration's snapshot.
+# This pty redraw is also unaffected by the PMU contention that otherwise
+# breaks PassMark's own results_*.yml write-out while EMON/SocWatch are
+# running (see parse_passmark_console.py for the full explanation), which is
+# what lets us reliably get real scores even in combined runs.
 # ---------------------------------------------------------------------------
 echo "[4/6] Running PassMark benchmark (blocking until complete)..."
-"$PASSMARK_BIN" -d "$D_FLAG" -i "$ITERATIONS" -p "$PROCESSES" -r "$R_FLAG" \
-  | tee "$PASSMARK_OUT"
+PASSMARK_START_EPOCH="$(date +%s)"
+PASSMARK_RAW="$RESULTS_DIR/passmark_console_raw.log"
+script -qefc "'$PASSMARK_BIN' -d $D_FLAG -i $ITERATIONS -p $PROCESSES -r $R_FLAG" "$PASSMARK_RAW" >/dev/null
 echo "  Benchmark finished."
 
 # ---------------------------------------------------------------------------
-# Step 4: gracefully stop telemetry the instant PassMark returns.
+# Step 4: gracefully stop telemetry the instant PassMark returns, BEFORE
+# polling for PassMark's results_*.yml below. PassMark's own write-out of that
+# file is known to be slightly racy (can land a couple seconds after the
+# process returns), and empirically that race is far more likely to fail
+# while EMON/SocWatch are still actively sampling all CPUs in the background
+# (resource contention with -p == all logical CPUs leaves it no headroom) -
+# so free up the CPUs first, then poll for the structured scores.
 # Never force-kill either tool (see Windows README safety notes - a forced
 # SocWatch kill has previously been correlated with a CRITICAL_PROCESS_DIED
 # BSOD on Windows; the same discipline is kept here out of caution).
@@ -246,6 +261,46 @@ echo "  Waiting for EMON/SocWatch to finish flushing output..."
 wait "$EMON_WRAPPER_PID" 2>/dev/null
 wait "$SOC_WRAPPER_PID" 2>/dev/null
 
+# ---------------------------------------------------------------------------
+# Step 6: capture PassMark's structured scores.
+#
+# Primary source: parse the pty-captured final console redraw
+# (passmark_console_raw.log) into results_console_<suite>.yml. This works
+# reliably even with EMON/SocWatch active, since it reads values already
+# drawn to screen rather than relying on PassMark's own (PMU-contention-
+# sensitive) yml writer.
+#
+# Bonus/fallback: also poll for PassMark's own native results_*.yml (next to
+# the binary) for a couple seconds in case it happens to succeed too - its
+# filename sorts before results_console_*.yml, so analyze_run.py prefers it
+# automatically when both are present.
+# ---------------------------------------------------------------------------
+SUITE_LOWER="$(echo "$SUITE" | tr '[:upper:]' '[:lower:]')"
+CONSOLE_YML="$RESULTS_DIR/results_console_${SUITE_LOWER}.yml"
+if python3 "$SCRIPT_DIR/parse_passmark_console.py" "$PASSMARK_RAW" "$CONSOLE_YML"; then
+  echo "  PassMark scores parsed from console capture -> $(basename "$CONSOLE_YML")"
+else
+  echo "  WARNING: Could not parse PassMark scores from console capture." >&2
+fi
+
+PASSMARK_DIR="$(dirname "$PASSMARK_BIN")"
+shopt -s nullglob
+PASSMARK_YML_FOUND=0
+for attempt in $(seq 1 3); do
+  for yml in "$PASSMARK_DIR"/results_*.yml; do
+    if [ "$(stat -c '%Y' "$yml")" -ge "$PASSMARK_START_EPOCH" ]; then
+      cp "$yml" "$RESULTS_DIR/"
+      PASSMARK_YML_FOUND=1
+    fi
+  done
+  [ "$PASSMARK_YML_FOUND" -eq 1 ] && break
+  sleep 1
+done
+shopt -u nullglob
+if [ "$PASSMARK_YML_FOUND" -eq 1 ]; then
+  echo "  Bonus: PassMark's own native results_*.yml was also captured."
+fi
+
 # EMON/SocWatch ran as root (driver access), so their output files are
 # root-owned; hand them back to the invoking user so results are readable
 # without sudo.
@@ -254,7 +309,8 @@ sudo chown -R "$(id -u):$(id -g)" "$RESULTS_DIR"
 echo "[6/6] Done."
 echo "============================================================"
 echo " Results saved to: $RESULTS_DIR"
-echo "   - PassMark_PerfRes.txt"
+echo "   - passmark_console_raw.log (raw pty capture) + results_console_${SUITE_LOWER}.yml (parsed scores)"
+echo "   - results_*.yml (PassMark's own native scores, if it also succeeded)"
 echo "   - emon.csv"
 echo "   - socwatch/ (socwatch*.csv)"
 echo "   - system_info.txt"

@@ -89,8 +89,46 @@ if [ "$CONFIRM" -eq 1 ]; then
 fi
 
 echo "Starting PassMark benchmark..."
-"$PASSMARK_BIN" -d "$D_FLAG" -i "$ITERATIONS" -p "$PROCESSES" -r "$R_FLAG" \
-  | tee "$RESULTS_DIR/PassMark_PerfRes.txt"
+PASSMARK_START_EPOCH="$(date +%s)"
+
+# Run under a real pseudo-terminal via `script`, not a plain pipe/tee.
+# PassMark only does its full final curses-style redraw (accurate per-test
+# values at fixed on-screen positions) when stdout is a real tty; redirecting
+# to a pipe truncates the captured output to the first iteration's snapshot.
+PASSMARK_RAW="$RESULTS_DIR/passmark_console_raw.log"
+script -qefc "'$PASSMARK_BIN' -d $D_FLAG -i $ITERATIONS -p $PROCESSES -r $R_FLAG" "$PASSMARK_RAW" >/dev/null
+
+# Primary score source: parse the pty-captured final console redraw.
+SUITE_LOWER="$(echo "$SUITE" | tr '[:upper:]' '[:lower:]')"
+CONSOLE_YML="$RESULTS_DIR/results_console_${SUITE_LOWER}.yml"
+if python3 "$SCRIPT_DIR/parse_passmark_console.py" "$PASSMARK_RAW" "$CONSOLE_YML"; then
+  echo "  PassMark scores parsed from console capture -> $(basename "$CONSOLE_YML")"
+else
+  echo "  WARNING: Could not parse PassMark scores from console capture." >&2
+fi
+
+# Bonus/fallback: also poll for PassMark's own native results_<suite>.yml (next
+# to the binary) in case it happens to succeed too - its filename sorts before
+# results_console_*.yml, so analyze_run.py prefers it automatically when both
+# are present.
+PASSMARK_DIR="$(dirname "$PASSMARK_BIN")"
+shopt -s nullglob
+PASSMARK_YML_FOUND=0
+for attempt in $(seq 1 3); do
+  for yml in "$PASSMARK_DIR"/results_*.yml; do
+    if [ "$(stat -c '%Y' "$yml")" -ge "$PASSMARK_START_EPOCH" ]; then
+      cp "$yml" "$RESULTS_DIR/"
+      PASSMARK_YML_FOUND=1
+    fi
+  done
+  [ "$PASSMARK_YML_FOUND" -eq 1 ] && break
+  sleep 1
+done
+shopt -u nullglob
+if [ "$PASSMARK_YML_FOUND" -eq 1 ]; then
+  echo "  Bonus: PassMark's own native results_*.yml was also captured."
+fi
 
 echo ""
-echo "Benchmark complete. Results saved to: $RESULTS_DIR/PassMark_PerfRes.txt"
+echo "Benchmark complete. Results saved to: $RESULTS_DIR/"
+echo "  - passmark_console_raw.log (raw pty capture) + results_console_${SUITE_LOWER}.yml (parsed scores)"

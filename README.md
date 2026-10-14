@@ -11,12 +11,15 @@ PassMark PerformanceTest build is a plain **blocking CLI binary** - it runs the
 selected suite(s) and exits on its own. No window automation or dialog polling
 is needed at all; completion detection is simply "the process returned".
 
-Two scripts are provided:
+Scripts provided:
 
 | Script | Purpose |
 |---|---|
 | `run_passmark_auto.sh` | Standalone PassMark automation only (no telemetry). |
 | `run_combined_test.sh` | PassMark automation **plus** EMON + SocWatch telemetry capture, dynamically started/stopped to match the actual benchmark run time, plus power-plan handling. |
+| `parse_passmark_console.py` | Parses PassMark's final on-screen console state (captured via a real pseudo-terminal) into structured scores. Used automatically by both scripts above - see "How PassMark scores are captured" below. |
+| `analyze_run.py` | Per-run analysis: parses `emon.csv`/`socwatch.csv`/PassMark scores for one `Results/<timestamp>/` folder and produces plots + a tidy EMON CSV. |
+| `cross_run_analysis.py` | Cross-run analysis: aggregates every run under `Results/`, correlates PassMark scores against telemetry metrics, and writes `TELEMETRY_CORRELATION_REPORT.md`. |
 
 ## Requirements
 
@@ -35,6 +38,11 @@ Two scripts are provided:
   and loaded.
 - `power-profiles-daemon` (`powerprofilesctl`) for the power-plan option
   (combined script only). If unavailable, use `-w as-is` to skip it.
+- `util-linux`'s `script` command (present by default on virtually every
+  distro) and Python 3 with `pyyaml` installed, for PassMark score capture
+  (see "How PassMark scores are captured" below).
+- For `analyze_run.py`/`cross_run_analysis.py`: Python 3 with `pandas`,
+  `matplotlib`, `scipy`, `tabulate`, and `pyyaml`.
 
 ### What's not in this repo
 
@@ -83,10 +91,11 @@ Common parameters:
 
 Results are written to a timestamped folder inside the project itself, e.g.
 `Results/<yyyyMMdd_HHmmss>/` (next to the script), containing
-`PassMark_PerfRes.txt`, `emon.csv`, `socwatch/socwatch.csv`/`.sw2`, and
-`system_info.txt` (combined script only). `Results/` is git-ignored, so run
-output is never committed/pushed - only the scripts/docs are
-version-controlled.
+`passmark_console_raw.log` (raw pty capture), `results_console_<suite>.yml`
+(parsed PassMark scores - see below), `emon.csv`, `socwatch/socwatch.csv`/
+`.sw2`, and `system_info.txt` (combined script only). `Results/` is
+git-ignored, so run output is never committed/pushed - only the
+scripts/docs are version-controlled.
 
 ### Test-bed configuration snapshot (`system_info.txt`, combined script only)
 Every run of `run_combined_test.sh` captures a `system_info.txt` into the
@@ -102,6 +111,48 @@ of (and reproduce) a given benchmark's numbers.
 PassMark's Linux CLI build is a blocking process: `run_combined_test.sh` runs
 it in the foreground and simply waits for it to return - that return **is**
 the completion signal, no dialog/window polling required.
+
+### How PassMark scores are captured
+
+PassMark normally writes its final structured scores to a `results_<suite>.yml`
+file next to its own binary. In practice this turned out to be unreliable for
+this project's purposes:
+
+- That file has **no run-id and is overwritten every invocation** - it must be
+  copied out immediately, and both scripts still try to do so (as a bonus; see
+  below).
+- Piping PassMark's output through a plain pipe/redirect (`| tee foo.txt`)
+  **truncates the captured console text to the first iteration's snapshot**
+  - PassMark only does its full final redraw when stdout is a real TTY.
+- More importantly, **when EMON and/or SocWatch are running concurrently**,
+  they claim exclusive hardware PMU (performance-monitor-counter) registers
+  via their kernel drivers. PassMark appears to read those same counters
+  internally, and under that contention its `results_*.yml` **write step
+  silently fails** - even though the on-screen values stay correct throughout.
+  This was confirmed by extensive isolated testing (reduced EMON event sets,
+  SocWatch alone, reordering telemetry-stop timing, etc. all still broke the
+  yml write whenever either tool was active).
+
+**The fix:** both scripts run PassMark under a real pseudo-terminal via
+`script -qefc "<passmark cmd>" passmark_console_raw.log`. PassMark then does a
+full, accurate final screen redraw using absolute ANSI cursor-position escape
+codes (`\x1b[<row>;<col>H<value>`) - and this redraw is **unaffected by
+EMON/SocWatch PMU contention** (confirmed with both tools running
+concurrently, across multiple iteration counts). `parse_passmark_console.py`
+extracts those final on-screen values - matching them to PassMark's own field
+names (`SUMM_CPU`, `CPU_INTEGER_MATH`, etc.) by using the order sub-test
+value positions are first touched in the stream, not by hardcoding row
+numbers - and writes them to `results_console_<suite>.yml` in the run's
+results folder, in the exact same schema as PassMark's native yml. A
+sub-test whose displayed value never changes from its startup placeholder
+(e.g. Memory Latency/Threaded tests PassMark sometimes skips for shorter
+durations) is correctly omitted rather than reported as a false zero.
+
+Both scripts also still poll briefly for PassMark's own native
+`results_<suite>.yml` as a bonus/fallback (its filename sorts alphabetically
+before `results_console_*.yml`, so `analyze_run.py` prefers it automatically
+on the rare occasion it succeeds) - but the console-parsed file is the
+reliable, primary source of scores for combined runs.
 
 ### Telemetry start/stop
 Telemetry duration is **dynamic, not a fixed/guessed timer**, same intent as
@@ -126,6 +177,32 @@ the Windows script:
 4. EMON/SocWatch run under `sudo` for driver access, so their output files
    are root-owned; the script `chown`s the whole results folder back to the
    invoking user at the end so results are readable without `sudo`.
+
+## Analysis scripts
+
+After one or more runs exist under `Results/`:
+
+```bash
+# Per-run deep-dive: plots + tidy telemetry CSV for one run
+python3 analyze_run.py Results/<timestamp>/
+
+# Cross-run correlation report across every run under Results/
+python3 cross_run_analysis.py Results/
+```
+
+`analyze_run.py` parses `emon.csv` (auto-detecting core count/base frequency
+from `socwatch.csv`'s header), `socwatch.csv`'s summary tables, and PassMark
+scores (preferring a native `results_*.yml` if present, otherwise
+`results_console_*.yml`), writing 4 plots and `emon_timeseries_tidy.csv` to
+`<run>/analysis/`.
+
+`cross_run_analysis.py` aggregates every run folder into one table, computes
+Pearson correlations between PassMark scores and telemetry metrics (treating
+each run as one observation), and writes `Results/TELEMETRY_CORRELATION_REPORT.md`
+plus supporting plots/CSVs under `Results/cross_run_analysis/`. With only a
+handful of runs this is **exploratory/descriptive**, not a statistically
+robust regression - treat it as a starting point for repeat-testing, not a
+final conclusion.
 
 ## Safety notes (read before modifying)
 
