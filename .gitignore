@@ -1,0 +1,20 @@
+# Test/benchmark output - never commit captured results
+Results/
+*_Results/
+*.csv
+*.log
+results_*.yml
+*.sw2
+
+# Third-party / Intel NDA tool installations - NOT version-controlled.
+# These are separately downloaded/installed in place per the README; only the
+# orchestration scripts in this repo are version-controlled.
+PerformanceTest_Linux/
+PerformanceTest_Linux_x86-64.zip
+socwatch/
+emon/
+compat_libs/
+
+# Python cache
+__pycache__/
+*.pyc
