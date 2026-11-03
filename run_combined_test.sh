@@ -37,6 +37,7 @@ SUITE="All"               # CPU | Memory | All
 CONFIRM=0                 # 0 = fully automatic, 1 = ask Y/N before running
 SOCWATCH_SAFETY_CAP=900   # seconds; hard ceiling only, not the expected run length
 POWER_PLAN="performance"  # as-is | balanced | performance | power-saver (matches `powerprofilesctl`)
+GOVERNOR="as-is"          # as-is | performance | powersave (cpufreq scaling governor)
 
 EMON_EVENTS="INST_RETIRED.ANY, CPU_CLK_UNHALTED.REF_TSC, LONGEST_LAT_CACHE.MISS"
 SOCWATCH_FEATURES=(cpu-wakeup sys-memory cpu-freq uncore-freq cpu-ipc cache \
@@ -57,6 +58,10 @@ Options:
                                                   Power profile during the benchmark (default: performance),
                                                   i.e. the same names shown by \`powerprofilesctl list\`.
                                                   Original profile is always restored afterward, even on error.
+  -g, --governor <as-is|performance|powersave>  CPU cpufreq governor during the benchmark (default: as-is),
+                                                  applied on all CPUs after the power profile. Independent of
+                                                  -w: the profile sets EPP/platform profile, not the governor.
+                                                  Original governor is always restored afterward, even on error.
   -h, --help                                    Show this help
 EOF
 }
@@ -70,6 +75,7 @@ while [ $# -gt 0 ]; do
     -c|--confirm) CONFIRM=1; shift ;;
     -s|--socwatch-safety-cap) SOCWATCH_SAFETY_CAP="$2"; shift 2 ;;
     -w|--power-plan) POWER_PLAN="$2"; shift 2 ;;
+    -g|--governor) GOVERNOR="$2"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     *) echo "Unknown option: $1" >&2; usage; exit 1 ;;
   esac
@@ -93,6 +99,15 @@ esac
 case "$POWER_PLAN" in
   as-is|balanced|performance|power-saver) ;;
   *) echo "Invalid --power-plan: $POWER_PLAN (expected as-is|balanced|performance|power-saver)" >&2; exit 1 ;;
+esac
+
+case "$GOVERNOR" in
+  as-is) ;;
+  performance|powersave)
+    if ! grep -qw "$GOVERNOR" /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors 2>/dev/null; then
+      echo "Governor '$GOVERNOR' is not available on this system" >&2; exit 1
+    fi ;;
+  *) echo "Invalid --governor: $GOVERNOR (expected as-is|performance|powersave)" >&2; exit 1 ;;
 esac
 
 if [ ! -x "$PASSMARK_BIN" ]; then
@@ -130,6 +145,7 @@ echo " Processes           : $PROCESSES"
 echo " Suite               : $SUITE (-r $R_FLAG)"
 echo " SocWatch safety cap : ${SOCWATCH_SAFETY_CAP}s"
 echo " Power plan          : $POWER_PLAN"
+echo " CPU governor        : $GOVERNOR"
 echo " Results             : $RESULTS_DIR"
 echo "============================================================"
 
@@ -150,6 +166,7 @@ fi
 # safety net as the Windows script.
 # ---------------------------------------------------------------------------
 ORIGINAL_PROFILE="$(powerprofilesctl get 2>/dev/null || true)"
+ORIGINAL_GOVERNOR="$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 2>/dev/null || true)"
 if [ "$POWER_PLAN" = "as-is" ]; then
   TARGET_PROFILE=""
 else
@@ -157,6 +174,10 @@ else
 fi
 
 restore_power_plan() {
+  if [ -n "$ORIGINAL_GOVERNOR" ] && [ "$GOVERNOR" != "as-is" ]; then
+    echo "$ORIGINAL_GOVERNOR" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor >/dev/null 2>&1
+    echo "  CPU governor restored to: $ORIGINAL_GOVERNOR"
+  fi
   if [ -n "$TARGET_PROFILE" ] && [ -n "$ORIGINAL_PROFILE" ]; then
     current="$(powerprofilesctl get 2>/dev/null || true)"
     if [ "$current" != "$ORIGINAL_PROFILE" ]; then
@@ -172,6 +193,17 @@ if [ -n "$TARGET_PROFILE" ]; then
   sudo powerprofilesctl set "$TARGET_PROFILE"
 else
   echo "[1/6] Power profile left as-is ($ORIGINAL_PROFILE)."
+fi
+
+# Governor is applied after the profile so the profile can't override it.
+if [ "$GOVERNOR" != "as-is" ]; then
+  echo "      Setting CPU governor to $GOVERNOR; original was: $ORIGINAL_GOVERNOR"
+  echo "$GOVERNOR" | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor >/dev/null
+  if [ "$(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor)" != "$GOVERNOR" ]; then
+    echo "ERROR: failed to set governor to $GOVERNOR" >&2; exit 1
+  fi
+else
+  echo "      CPU governor left as-is ($ORIGINAL_GOVERNOR)."
 fi
 
 # ---------------------------------------------------------------------------
@@ -201,6 +233,7 @@ echo "[2/6] Capturing system_info.txt..."
   echo "Original: $ORIGINAL_PROFILE | During run: ${TARGET_PROFILE:-$ORIGINAL_PROFILE (AsIs)}"
   echo ""
   echo "=== CPU power settings (during run) ==="
+  echo "Governor requested: $GOVERNOR (original: $ORIGINAL_GOVERNOR)"
   CPUFREQ=/sys/devices/system/cpu/cpu0/cpufreq
   echo "Scaling driver: $(cat $CPUFREQ/scaling_driver 2>/dev/null || echo n/a)"
   echo "Governor: $(cat $CPUFREQ/scaling_governor 2>/dev/null || echo n/a)"

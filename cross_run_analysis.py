@@ -119,6 +119,7 @@ def parse_system_info(sysinfo_path: Path) -> dict:
         "gpu": r"=== GPU ===\n(.+)",
         "power_plan_applied": r"During run:\s*(\S+)",
         "governor": r"^Governor:\s*(.+)$",
+        "governor_requested": r"^Governor requested:\s*(\S+)",
         "epp": r"^EPP:\s*(.+)$",
         "platform_profile": r"^Platform profile:\s*(.+)$",
     }
@@ -159,6 +160,9 @@ def collect_runs(root: Path) -> tuple[pd.DataFrame, dict]:
         if run_sys_info:
             row["cpu_model"] = run_sys_info.get("cpu_model")
             row["power_plan"] = run_sys_info.get("power_plan_applied")
+            gov_req = run_sys_info.get("governor_requested")
+            if row["power_plan"] and gov_req and gov_req != "as-is":
+                row["power_plan"] = f"{row['power_plan']}+{gov_req}-gov"
             row["governor"] = run_sys_info.get("governor")
             row["epp"] = run_sys_info.get("epp")
             row["platform_profile"] = run_sys_info.get("platform_profile")

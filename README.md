@@ -170,6 +170,10 @@ Common parameters:
   (energy performance preference: `performance` / `balance_performance` /
   `power`) and the ACPI platform profile (`performance` / `balanced` /
   `low-power`), which is what separates the scores.
+  To also force the CPU governor, use `-g, --governor <as-is|performance|powersave>`
+  (default `as-is`). It is applied on all CPUs after the power profile and
+  restored afterward (also via the `trap`). Runs with a forced governor are
+  labelled e.g. `balanced+performance-gov` in the cross-run report.
 
 Results are written to a timestamped folder inside the project itself, e.g.
 `Results/<yyyyMMdd_HHmmss>/` (next to the script), containing
