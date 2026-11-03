@@ -97,6 +97,37 @@ sudo ./emon-installer.sh -ni -i --accept-license -C /opt/intel
   `Illegal number: 18-intel` warning may appear on `-intel` kernels.
 - Verify: `sudo bash -c "source /opt/intel/emon/sep_vars.sh && emon -v"`.
 
+## Setup: PassMark
+
+Obtain the PassMark PerformanceTest Linux x86-64 zip through your own
+licensed channel, then from the project folder:
+
+```bash
+mkdir -p PerformanceTest_Linux
+unzip <PerformanceTest_Linux_x86-64.zip> -d PerformanceTest_Linux
+chmod +x PerformanceTest_Linux/PerformanceTest/PerformanceTest_Linux_x86-64
+```
+
+The zip contains only the binary, which needs `libncurses.so.5`/`libtinfo.so.5`
+(absent on Ubuntu 24.04+). Put the ncurses 5 libraries (e.g. from the Ubuntu
+`libncurses5` and `libtinfo5` packages) in `PerformanceTest_Linux/compat_libs/`,
+and create `PerformanceTest_Linux/PerformanceTest/run.sh`, the wrapper the
+scripts call:
+
+```bash
+#!/bin/bash
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export LD_LIBRARY_PATH="$HERE/../compat_libs${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+cd "$HERE" || exit 1
+exec ./PerformanceTest_Linux_x86-64 "$@"
+```
+
+Make it executable (`chmod +x`). Check with `run.sh -h`; it should print the
+option list. All of `PerformanceTest_Linux/` is git-ignored.
+
+For the analysis scripts on Ubuntu 24.04+, install `tabulate` with
+`sudo apt install python3-tabulate` (plain `pip install` is blocked by PEP 668).
+
 ## Usage
 
 ```bash
