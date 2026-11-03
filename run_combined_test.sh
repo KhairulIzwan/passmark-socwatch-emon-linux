@@ -106,7 +106,7 @@ if [ ! -f "$EMON_VARS" ]; then
 fi
 # The sep5/pax drivers are not persistent across reboots; without them EMON
 # silently writes no emon.csv.
-if ! lsmod | grep -q '^sep5 '; then
+if [ ! -d /sys/module/sep5 ]; then
   echo "ERROR: EMON sep5 driver is not loaded. Load it with:" >&2
   echo "  sudo /opt/intel/emon/sepdk/src/insmod-sep" >&2
   exit 1
@@ -199,6 +199,15 @@ echo "[2/6] Capturing system_info.txt..."
   echo ""
   echo "=== Power plan ==="
   echo "Original: $ORIGINAL_PROFILE | During run: ${TARGET_PROFILE:-$ORIGINAL_PROFILE (AsIs)}"
+  echo ""
+  echo "=== CPU power settings (during run) ==="
+  CPUFREQ=/sys/devices/system/cpu/cpu0/cpufreq
+  echo "Scaling driver: $(cat $CPUFREQ/scaling_driver 2>/dev/null || echo n/a)"
+  echo "Governor: $(cat $CPUFREQ/scaling_governor 2>/dev/null || echo n/a)"
+  echo "EPP: $(cat $CPUFREQ/energy_performance_preference 2>/dev/null || echo n/a)"
+  echo "Platform profile: $(cat /sys/firmware/acpi/platform_profile 2>/dev/null || echo n/a)"
+  echo "Max/Min freq (kHz): $(cat $CPUFREQ/scaling_max_freq 2>/dev/null || echo n/a) / $(cat $CPUFREQ/scaling_min_freq 2>/dev/null || echo n/a)"
+  echo "Turbo disabled (no_turbo): $(cat /sys/devices/system/cpu/intel_pstate/no_turbo 2>/dev/null || echo n/a)"
 } > "$SYSTEM_INFO" 2>&1
 
 # ---------------------------------------------------------------------------

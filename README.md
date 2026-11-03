@@ -165,6 +165,11 @@ Common parameters:
   `balanced` (the usual Linux default) throttles for power savings and can
   make benchmark runs inconsistent run-to-run; `performance` removes that
   throttling.
+  The profile does **not** change the CPU governor: on `intel_pstate` it
+  stays `powersave` for all three profiles. The profile changes the EPP
+  (energy performance preference: `performance` / `balance_performance` /
+  `power`) and the ACPI platform profile (`performance` / `balanced` /
+  `low-power`), which is what separates the scores.
 
 Results are written to a timestamped folder inside the project itself, e.g.
 `Results/<yyyyMMdd_HHmmss>/` (next to the script), containing
@@ -178,9 +183,12 @@ scripts/docs are version-controlled.
 Every run of `run_combined_test.sh` captures a `system_info.txt` into the
 results folder with the CPU model/cores/threads, installed RAM
 (size/speed/manufacturer per module via `dmidecode`), BIOS version/date, OS
-build, GPU model, and which power plan was active originally vs. during the
-run - the baseline hardware/software configuration info needed to make sense
-of (and reproduce) a given benchmark's numbers.
+build, GPU model, which power plan was active originally vs. during the
+run, and the CPU power settings in effect during the run (scaling driver,
+governor, EPP, ACPI platform profile, min/max frequency, turbo) - the baseline
+hardware/software configuration info needed to make sense
+of (and reproduce) a given benchmark's numbers. `cross_run_analysis.py` lists
+the governor/EPP/platform profile per power plan in its report.
 
 ## How it works
 

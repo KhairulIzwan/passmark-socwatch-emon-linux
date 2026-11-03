@@ -118,9 +118,12 @@ def parse_system_info(sysinfo_path: Path) -> dict:
         "os": r"Description:\s*(.+)",
         "gpu": r"=== GPU ===\n(.+)",
         "power_plan_applied": r"During run:\s*(\S+)",
+        "governor": r"^Governor:\s*(.+)$",
+        "epp": r"^EPP:\s*(.+)$",
+        "platform_profile": r"^Platform profile:\s*(.+)$",
     }
     for key, pat in patterns.items():
-        m = re.search(pat, text)
+        m = re.search(pat, text, re.MULTILINE)
         if m:
             out[key] = m.group(1).strip()
     return out
@@ -156,6 +159,9 @@ def collect_runs(root: Path) -> tuple[pd.DataFrame, dict]:
         if run_sys_info:
             row["cpu_model"] = run_sys_info.get("cpu_model")
             row["power_plan"] = run_sys_info.get("power_plan_applied")
+            row["governor"] = run_sys_info.get("governor")
+            row["epp"] = run_sys_info.get("epp")
+            row["platform_profile"] = run_sys_info.get("platform_profile")
             if not sys_info:
                 sys_info = run_sys_info
 
@@ -287,6 +293,14 @@ def main():
                        f"{', '.join(sorted(df['power_plan'].dropna().unique()))}) - see breakdown below.\n")
         elif n_plans == 1:
             md.append(f"- **Power profile (during run)**: {df['power_plan'].dropna().iloc[0]}\n")
+        if "governor" in df.columns and df["governor"].notna().any():
+            md.append("- **CPU power settings per profile** (governor / EPP / ACPI platform profile):\n")
+            settings = (df.dropna(subset=["power_plan"])
+                          .groupby("power_plan")[["governor", "epp", "platform_profile"]]
+                          .first())
+            for plan, r in settings.iterrows():
+                md.append(f"  - `{plan}`: governor `{r['governor']}`, EPP `{r['epp']}`, "
+                           f"platform profile `{r['platform_profile']}`\n")
         md.append("\n")
 
     md.append("## Methodology\n")
