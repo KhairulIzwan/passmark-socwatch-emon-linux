@@ -96,6 +96,11 @@ sudo ./emon-installer.sh -ni -i --accept-license -C /opt/intel
 - The installer builds and loads the `sep5`/`pax` kernel drivers. A harmless
   `Illegal number: 18-intel` warning may appear on `-intel` kernels.
 - Verify: `sudo bash -c "source /opt/intel/emon/sep_vars.sh && emon -v"`.
+- **The `sep5`/`pax` drivers do not survive a reboot** (or a hardware/Si
+  change). Reload them before testing with
+  `sudo /opt/intel/emon/sepdk/src/insmod-sep`. If they are not loaded,
+  EMON silently produces no `emon.csv`; `run_combined_test.sh` now checks
+  for the driver and stops with an error instead.
 
 ## Setup: PassMark
 

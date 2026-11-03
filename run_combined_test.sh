@@ -104,6 +104,13 @@ fi
 if [ ! -f "$EMON_VARS" ]; then
   echo "ERROR: EMON sep_vars.sh not found at $EMON_VARS (is EMON installed at /opt/intel/emon?)" >&2; exit 1
 fi
+# The sep5/pax drivers are not persistent across reboots; without them EMON
+# silently writes no emon.csv.
+if ! lsmod | grep -q '^sep5 '; then
+  echo "ERROR: EMON sep5 driver is not loaded. Load it with:" >&2
+  echo "  sudo /opt/intel/emon/sepdk/src/insmod-sep" >&2
+  exit 1
+fi
 
 TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
 RESULTS_DIR="$SCRIPT_DIR/Results/$TIMESTAMP"
