@@ -56,6 +56,26 @@ shipped in the repo). You must obtain and install/extract each tool
 separately per your own license/NDA terms, in the directory layout described
 above.
 
+## Setup: SoC Watch
+
+Obtain the SoC Watch Linux package through your own internal/licensed
+channel, then from the project folder:
+
+```bash
+mkdir -p socwatch
+tar -xzf <socwatch_linux_..._x86_64.tar.gz> -C socwatch
+cd socwatch/socwatch_linux_*/
+bash ./build_drivers.sh -l      # use bash, not sh ("Bad substitution" under sh)
+```
+
+- `-l` builds the Linux driver; `-k <kernel build dir>` is only required for
+  Android/Chrome targets. Kernel headers for the running kernel
+  (`/lib/modules/$(uname -r)/build`) must be installed.
+- The built driver is copied to `drivers/socwatch*.ko` inside the SoC Watch
+  folder.
+- `SOCWATCH_DIR` in `run_combined_test.sh` must match the extracted folder
+  name; edit it if you use a different SoC Watch version.
+
 ## Usage
 
 ```bash
