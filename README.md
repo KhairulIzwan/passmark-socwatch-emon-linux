@@ -76,6 +76,27 @@ bash ./build_drivers.sh -l      # use bash, not sh ("Bad substitution" under sh)
 - `SOCWATCH_DIR` in `run_combined_test.sh` must match the extracted folder
   name; edit it if you use a different SoC Watch version.
 
+## Setup: EMON
+
+Obtain the EMON Linux package (`emon_nda_*_linux_*.tar.bz2`) through your own
+internal/licensed channel, then:
+
+```bash
+tar -xjf <emon_package>.tar.bz2
+cd emon_nda_*/
+sudo ./emon-installer.sh -ni -i --accept-license -C /opt/intel
+```
+
+- `--accept-license` means you have read and accept the EMON EULA
+  (`license.txt` in the package).
+- Use `-C /opt/intel`, **not** `-C /opt/intel/emon`: the installer creates
+  `/opt/intel/emon_nda_<version>/` and an `/opt/intel/emon` link to it, which
+  is where `run_combined_test.sh` looks for `sep_vars.sh`. Passing
+  `/opt/intel/emon` nests it one level too deep.
+- The installer builds and loads the `sep5`/`pax` kernel drivers. A harmless
+  `Illegal number: 18-intel` warning may appear on `-intel` kernels.
+- Verify: `sudo bash -c "source /opt/intel/emon/sep_vars.sh && emon -v"`.
+
 ## Usage
 
 ```bash
