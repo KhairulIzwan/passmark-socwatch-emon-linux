@@ -181,7 +181,11 @@ Results are written to a timestamped folder inside the project itself, e.g.
 (parsed PassMark scores - see below), `emon.csv`, `socwatch/socwatch.csv`/
 `.sw2`, and `system_info.txt` (combined script only). `Results/` is
 git-ignored, so run output is never committed/pushed - only the
-scripts/docs are version-controlled.
+scripts/docs are version-controlled. Raw SoC Watch/EMON captures stay local
+(NDA/internal tools); only derived summaries are committed, by copying the
+report, `cross_run_analysis/` CSVs/plots, per-run `analysis/*.png` and
+`results_console_*.yml` scores into `reports/` (same layout as `Results/`, so
+the report's image links keep working).
 
 ### Test-bed configuration snapshot (`system_info.txt`, combined script only)
 Every run of `run_combined_test.sh` captures a `system_info.txt` into the
