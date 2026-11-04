@@ -181,11 +181,13 @@ Results are written to a timestamped folder inside the project itself, e.g.
 (parsed PassMark scores - see below), `emon.csv`, `socwatch/socwatch.csv`/
 `.sw2`, and `system_info.txt` (combined script only). `Results/` is
 git-ignored, so working captures are not committed automatically. Curated
-runs are archived under `reports/`, following the Windows report approach:
+runs are archived by CPU SKU under
+`reports/telemetry_correlation_report/<SKU>/`, following the Windows report
+approach (for this system: [CoreUltra7_366H](reports/telemetry_correlation_report/CoreUltra7_366H/SUMMARY.md)):
 copy the report, `cross_run_analysis/` CSVs/plots, and each archived run's
 `emon.csv`, `socwatch/socwatch.csv`, `analysis/` CSVs/plots,
 `results_console_*.yml` scores and `system_info.txt`. Keep the same layout as
-`Results/` so the report's image links keep working. Report-only ignore
+`Results/` within each SKU folder so the report's image links keep working. Report-only ignore
 exceptions allow the CSVs and parsed score YAMLs to be version-controlled;
 SoC Watch `.sw2` binary traces, tool logs and tool installations stay ignored.
 Use the console-derived scores, not the potentially stale native
