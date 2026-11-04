@@ -65,5 +65,9 @@ afterwards (the profile does not change the governor).
 
 ## Updating this summary
 
-Re-run `cross_run_analysis.py Results/`, copy the new report/plots/scores into
-`reports/` (see the README), then update the tables above.
+Re-run `cross_run_analysis.py Results/`, copy the new report/plots and backing
+data into `reports/` (see the README), then update the tables above. Each run
+includes raw `emon.csv` and `socwatch/socwatch.csv`, parsed PassMark scores in
+`results_console_all.yml`, `system_info.txt`, and the tidy EMON CSV under
+`analysis/`. Cross-run CSVs live alongside the plots in `cross_run_analysis/`.
+Binary `.sw2` traces and tool logs remain local.

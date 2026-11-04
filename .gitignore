@@ -1,4 +1,4 @@
-# Test/benchmark output - never commit captured results
+# Test/benchmark output - keep working captures local
 Results/
 *_Results/
 *.csv
@@ -14,6 +14,11 @@ PerformanceTest_Linux_x86-64.zip
 socwatch/
 emon/
 compat_libs/
+
+# Curated report backing data; binary traces and tool logs stay ignored.
+!reports/**/socwatch/
+!reports/**/*.csv
+!reports/**/results_console_*.yml
 
 # Python cache
 __pycache__/

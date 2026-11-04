@@ -49,7 +49,7 @@ Scripts provided:
 **PassMark, SoC Watch, and EMON themselves are intentionally not committed
 here** (see `.gitignore`): PassMark is third-party licensed software, and the
 SoC Watch/EMON packages used internally are marked **NDA / INTERNAL USE
-ONLY** by Intel. Only the orchestration scripts are version-controlled, same
+ONLY** by Intel. The orchestration scripts and curated reports are version-controlled, same
 as the Windows counterpart of this project (which likewise assumes PassMark/
 EMON/SoC Watch are already installed on the machine at known paths, not
 shipped in the repo). You must obtain and install/extract each tool
@@ -180,12 +180,19 @@ Results are written to a timestamped folder inside the project itself, e.g.
 `passmark_console_raw.log` (raw pty capture), `results_console_<suite>.yml`
 (parsed PassMark scores - see below), `emon.csv`, `socwatch/socwatch.csv`/
 `.sw2`, and `system_info.txt` (combined script only). `Results/` is
-git-ignored, so run output is never committed/pushed - only the
-scripts/docs are version-controlled. Raw SoC Watch/EMON captures stay local
-(NDA/internal tools); only derived summaries are committed, by copying the
-report, `cross_run_analysis/` CSVs/plots, per-run `analysis/*.png` and
-`results_console_*.yml` scores into `reports/` (same layout as `Results/`, so
-the report's image links keep working).
+git-ignored, so working captures are not committed automatically. Curated
+runs are archived under `reports/`, following the Windows report approach:
+copy the report, `cross_run_analysis/` CSVs/plots, and each archived run's
+`emon.csv`, `socwatch/socwatch.csv`, `analysis/` CSVs/plots,
+`results_console_*.yml` scores and `system_info.txt`. Keep the same layout as
+`Results/` so the report's image links keep working. Report-only ignore
+exceptions allow the CSVs and parsed score YAMLs to be version-controlled;
+SoC Watch `.sw2` binary traces, tool logs and tool installations stay ignored.
+Use the console-derived scores, not the potentially stale native
+`results_*.yml` exports (see below). Review telemetry and system information
+for sensitive data and applicable license/NDA restrictions before committing
+or publishing an archive; including a tool's output does not include the tool
+itself or establish permission to publish that output.
 
 ### Test-bed configuration snapshot (`system_info.txt`, combined script only)
 Every run of `run_combined_test.sh` captures a `system_info.txt` into the

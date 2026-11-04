@@ -1,0 +1,107 @@
+=== CPU ===
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           46 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  16
+On-line CPU(s) list:                     0-15
+Vendor ID:                               GenuineIntel
+Model name:                              Intel(R) Core(TM) Ultra 7 366H
+CPU family:                              6
+Model:                                   204
+Thread(s) per core:                      1
+Core(s) per socket:                      16
+Socket(s):                               1
+Stepping:                                2
+CPU(s) scaling MHz:                      29%
+CPU max MHz:                             4900.0000
+CPU min MHz:                             400.0000
+BogoMIPS:                                7603.20
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid rdt_a rdseed adx smap clflushopt clwb intel_pt sha_ni xsaveopt xsavec xgetbv1 xsaves split_lock_detect user_shstk avx_vnni lam wbnoinvd dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp hwp_pkg_req hfi vnmi umip pku ospke waitpkg gfni vaes vpclmulqdq rdpid bus_lock_detect movdiri movdir64b fsrm md_clear serialize arch_lbr ibt flush_l1d arch_capabilities
+Virtualization:                          VT-x
+L1d cache:                               576 KiB (16 instances)
+L1i cache:                               1 MiB (16 instances)
+L2 cache:                                24 MiB (7 instances)
+L3 cache:                                18 MiB (1 instance)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0-15
+Vulnerability Gather data sampling:      Not affected
+Vulnerability Ghostwrite:                Not affected
+Vulnerability Indirect target selection: Not affected
+Vulnerability Itlb multihit:             Not affected
+Vulnerability L1tf:                      Not affected
+Vulnerability Mds:                       Not affected
+Vulnerability Meltdown:                  Not affected
+Vulnerability Mmio stale data:           Not affected
+Vulnerability Old microcode:             Not affected
+Vulnerability Reg file data sampling:    Not affected
+Vulnerability Retbleed:                  Not affected
+Vulnerability Spec rstack overflow:      Not affected
+Vulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS Not affected; BHI BHI_DIS_S
+Vulnerability Srbds:                     Not affected
+Vulnerability Tsa:                       Not affected
+Vulnerability Tsx async abort:           Not affected
+Vulnerability Vmscape:                   Not affected
+
+=== Memory ===
+               total        used        free      shared  buff/cache   available
+Mem:            62Gi       4.5Gi        56Gi        68Mi       2.2Gi        57Gi
+Swap:          8.0Gi          0B       8.0Gi
+	Size: 32 GB
+	Locator: Controller0-ChannelA-DIMM0
+	Bank Locator: BANK 0
+	Speed: 6400 MT/s
+	Manufacturer: SK Hynix
+	Configured Memory Speed: 6400 MT/s
+	Non-Volatile Size: None
+	Volatile Size: 32 GB
+	Cache Size: None
+	Logical Size: None
+	Size: No Module Installed
+	Locator: Controller0-ChannelB-DIMM0
+	Bank Locator: BANK 1
+	Size: No Module Installed
+	Locator: Controller0-ChannelC-DIMM0
+	Bank Locator: BANK 2
+	Size: No Module Installed
+	Locator: Controller0-ChannelD-DIMM0
+	Bank Locator: BANK 3
+	Size: 32 GB
+	Locator: Controller1-ChannelA-DIMM0
+	Bank Locator: BANK 0
+	Speed: 6400 MT/s
+	Manufacturer: SK Hynix
+	Configured Memory Speed: 6400 MT/s
+	Non-Volatile Size: None
+	Volatile Size: 32 GB
+	Cache Size: None
+	Logical Size: None
+	Size: No Module Installed
+	Locator: Controller1-ChannelB-DIMM0
+	Bank Locator: BANK 1
+	Size: No Module Installed
+	Locator: Controller1-ChannelC-DIMM0
+	Bank Locator: BANK 2
+	Size: No Module Installed
+	Locator: Controller1-ChannelD-DIMM0
+	Bank Locator: BANK 3
+
+=== BIOS ===
+	Vendor: Intel Corporation
+	Version: PTLPFWI1.R00.3515.D56.2601280733
+	Release Date: 01/28/2026
+
+=== OS ===
+Linux localhost 6.18-intel #r2 SMP PREEMPT_DYNAMIC Wed Jul 15 10:44:37 +08 2026 x86_64 x86_64 x86_64 GNU/Linux
+Distributor ID:	Ubuntu
+Description:	Ubuntu 24.04.5 LTS
+Release:	24.04
+Codename:	noble
+
+=== GPU ===
+00:02.0 VGA compatible controller: Intel Corporation Device b0a0
+
+=== Power plan ===
+Original: balanced | During run: power-saver
