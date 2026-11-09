@@ -5,6 +5,14 @@ correlations: [TELEMETRY_CORRELATION_REPORT.md](TELEMETRY_CORRELATION_REPORT.md)
 
 ## Platform
 
+Metric correction: the column previously labeled IPC is instructions per
+unhalted reference cycle (`INST_RETIRED.ANY / CPU_CLK_UNHALTED.REF_TSC`),
+not instructions per actual core cycle. Values are unchanged. The archived
+EMON captures lack actual-cycle counters, so conventional IPC is unavailable.
+Derived CSVs now use `instructions_per_ref_cycle` and
+`avg_instructions_per_ref_cycle`; run averages equally weight valid
+core/sample ratios and exclude zero-reference samples.
+
 | Item | Value |
 |---|---|
 | Platform | Panther Lake Client Platform (PTL-UH DDR5 Embedded CRB) |
@@ -26,7 +34,7 @@ governor (`as-is` = left at `powersave`).
 
 ## Results
 
-| Run | `-w` profile | Governor | CPU Mark | Memory Mark | Avg pkg power | Avg active freq | IPC |
+| Run | `-w` profile | Governor | CPU Mark | Memory Mark | Avg pkg power | Avg active freq | instructions/ref cycle |
 |---|---|---|---|---|---|---|---|
 | 20261104_073216 | performance | powersave * | 30803 | 3769 | 21.6 W | 2950 MHz | 1.64 |
 | 20261104_080450 | performance | powersave | 30714 | 3790 | 21.5 W | 2947 MHz | 1.63 |
@@ -58,8 +66,8 @@ afterwards (the profile does not change the governor).
   EPP `power` / platform `low-power`. Governor stays `powersave`.
 - **Forcing the `performance` governor did not help**: about 2.7% lower CPU
   Mark (30732 vs 29891) with the same package power and about the same
-  frequency; the gap lines up with about 2.5% lower IPC. Memory Mark unchanged.
-  The cause of the IPC drop was not investigated.
+  frequency; the gap lines up with about 2.5% lower instructions/ref cycle. Memory Mark unchanged.
+  The cause of the instructions/ref cycle drop was not investigated.
 - Repeat runs of the same config agree within about 0.4%, so the
   governor difference is real; `power-saver` has only one run.
 

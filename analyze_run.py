@@ -40,7 +40,7 @@ def detect_system_params(socwatch_path: Path):
 
 
 def parse_emon(emon_path: Path, n_cores: int) -> pd.DataFrame:
-    """Parse emon.csv block-sampled counters into a tidy per-sample, per-core DataFrame."""
+    """Parse counters; instructions_per_ref_cycle uses unhalted reference ticks, not core cycles."""
     with open(emon_path, "r", encoding="utf-8", errors="ignore") as f:
         lines = f.readlines()
 
@@ -91,7 +91,7 @@ def parse_emon(emon_path: Path, n_cores: int) -> pd.DataFrame:
                 "inst_retired": inst_v,
                 "ref_tsc": ref_v,
                 "cache_miss": miss_v,
-                "ipc": inst_v / ref_v if ref_v else float("nan"),
+                "instructions_per_ref_cycle": inst_v / ref_v if ref_v else float("nan"),
                 "cache_miss_per_kinst": (miss_v / inst_v * 1000) if inst_v else float("nan"),
             })
     df = pd.DataFrame(records)
@@ -182,7 +182,7 @@ def main():
         print("WARNING: no emon samples parsed; skipping EMON-based plots.")
     else:
         avg_freq = emon_df.groupby("sample")["freq_ghz"].mean()
-        avg_ipc = emon_df.groupby("sample")["ipc"].mean()
+        avg_instructions_per_ref_cycle = emon_df.groupby("sample")["instructions_per_ref_cycle"].mean()
         avg_miss = emon_df.groupby("sample")["cache_miss_per_kinst"].mean()
 
         fig, axes = plt.subplots(3, 1, figsize=(12, 10), sharex=True)
@@ -191,9 +191,9 @@ def main():
         axes[0].set_title(f"Average CPU Frequency Across {n_cores} Logical CPUs Over Time")
         axes[0].grid(True, alpha=0.3)
 
-        axes[1].plot(avg_ipc.index, avg_ipc.values, color="tab:green")
-        axes[1].set_ylabel("Avg IPC")
-        axes[1].set_title("Average IPC (Instructions per Cycle) Over Time")
+        axes[1].plot(avg_instructions_per_ref_cycle.index, avg_instructions_per_ref_cycle.values, color="tab:green")
+        axes[1].set_ylabel("Instructions / ref cycle")
+        axes[1].set_title("Average Instructions per Unhalted Reference Cycle Over Time")
         axes[1].grid(True, alpha=0.3)
 
         axes[2].plot(avg_miss.index, avg_miss.values, color="tab:red")
