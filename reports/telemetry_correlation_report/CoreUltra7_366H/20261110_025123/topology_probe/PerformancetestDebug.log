@@ -1,0 +1,302 @@
+1202.564623: PerformanceTest Version: 11.0.1004
+1202.564689: Detect Model
+1202.564699: 
+1202.564714: Detect cpu sockets
+1202.568998: 1
+1202.569022: Threads per core: 1
+Logical CPUs: 16
+
+1202.569028: Hybrid flag = 1
+1202.570247: Logical P-cores: 4, Logical E-cores: 12
+
+1202.570295: Logical P-cores: 4, Logical E-cores: 12
+logical_per_pcore: 2, logical_per_ecore: 1
+
+1202.570300: Detect Manufacturer
+1202.574320: lscpu - manufacturer: GenuineIntel
+1202.574329: cpuid - manufacturer: GenuineIntel
+1202.574332: GenuineIntel
+1202.574335: Detect CPU Name
+1202.578278: lscpu - cpuName: Intel Core Ultra 7 366H
+1202.578298: cpuid - cpuName: Intel(R) Core(TM) Ultra 7 366H
+1202.578302: Intel(R) Core(TM) Ultra 7 366H
+1202.578304: Detect Architecture
+1202.581946: x86_64
+1202.581961: Detect CPU Frequency
+1202.581967: 3800 - 3800
+1202.581970: Detect cpu sockets
+1202.585770: 1
+1202.585779: Detect cpu cores
+1202.585783: Hybrid flag = 1
+1202.587329: Logical P-cores: 4, Logical E-cores: 12
+
+1202.587375: Logical P-cores: 4, Logical E-cores: 12
+logical_per_pcore: 2, logical_per_ecore: 1
+
+1202.587401: Detect OS
+1202.587432: Ubuntu 24.04.5 LTS
+1202.587436: Detect Kernel
+1202.587449: 6.18-intel
+1202.587452: Detect Memory
+1202.587463: 66961657856
+1202.594182: Running CPU Test: 0 on 16 Thread(s)
+1206.601867: INTEGER TEST: Time Elapsed = 3, Operations = 15418502000, MOps = 5139.5
+1206.601855: INTEGER TEST: Time Elapsed = 3, Operations = 17715210000, MOps = 5905.07
+1206.601855: INTEGER TEST: Time Elapsed = 3, Operations = 15963924000, MOps = 5321.31
+1206.601855: INTEGER TEST: Time Elapsed = 3, Operations = 13799560000, MOps = 4599.85
+1206.601880: INTEGER TEST: Time Elapsed = 3, Operations = 15799346000, MOps = 5266.45
+1206.601876: INTEGER TEST: Time Elapsed = 3, Operations = 15764130000, MOps = 5254.71
+1206.601881: INTEGER TEST: Time Elapsed = 3, Operations = 15927714000, MOps = 5309.24
+1206.601883: INTEGER TEST: Time Elapsed = 3, Operations = 15476722000, MOps = 5158.91
+1206.601889: INTEGER TEST: Time Elapsed = 3, Operations = 15459966000, MOps = 5153.32
+1206.601936: INTEGER TEST: Time Elapsed = 3, Operations = 15452298000, MOps = 5150.77
+1206.601942: INTEGER TEST: Time Elapsed = 3, Operations = 14846526000, MOps = 4948.84
+1206.602050: INTEGER TEST: Time Elapsed = 3, Operations = 16214554000, MOps = 5404.85
+1206.602050: INTEGER TEST: Time Elapsed = 3, Operations = 14842266000, MOps = 4947.42
+1206.602050: INTEGER TEST: Time Elapsed = 3, Operations = 14398232000, MOps = 4799.41
+1206.602153: INTEGER TEST: Time Elapsed = 3, Operations = 18324390000, MOps = 6108.13
+1206.604734: INTEGER TEST: Time Elapsed = 3, Operations = 15774496000, MOps = 5258.17
+1206.604772: CPU Test: 0 Cumulative Total = 83725.9
+1206.604841: Running CPU Test: 1 on 16 Thread(s)
+1210.620281: FLOAT TEST: Time Elapsed = 3, Operations = 16786932000MOps = 5595.64
+1210.620280: FLOAT TEST: Time Elapsed = 3, Operations = 16785036000MOps = 5595.01
+1210.620281: FLOAT TEST: Time Elapsed = 3, Operations = 16789740000MOps = 5596.58
+1210.620280: FLOAT TEST: Time Elapsed = 3, Operations = 16789056000MOps = 5596.35
+1210.620280: FLOAT TEST: Time Elapsed = 3, Operations = 16777020000MOps = 5592.34
+1210.620281: FLOAT TEST: Time Elapsed = 3, Operations = 16789716000MOps = 5596.57
+1210.620389: FLOAT TEST: Time Elapsed = 3, Operations = 20318976000MOps = 6772.99
+1210.620388: FLOAT TEST: Time Elapsed = 3, Operations = 24664056000MOps = 8221.35
+1210.620413: FLOAT TEST: Time Elapsed = 3, Operations = 14789304000MOps = 4929.77
+1210.620476: FLOAT TEST: Time Elapsed = 3, Operations = 14485716000MOps = 4828.57
+1210.620804: FLOAT TEST: Time Elapsed = 3, Operations = 28319784000MOps = 9439.93
+1210.620804: FLOAT TEST: Time Elapsed = 3, Operations = 28084584000MOps = 9361.52
+1210.620882: FLOAT TEST: Time Elapsed = 3, Operations = 15096456000MOps = 5032.15
+1210.622139: FLOAT TEST: Time Elapsed = 3.00189, Operations = 16787424000MOps = 5592.28
+1210.622275: FLOAT TEST: Time Elapsed = 3.00134, Operations = 21895068000MOps = 7295.09
+1210.623074: FLOAT TEST: Time Elapsed = 3, Operations = 16659504000MOps = 5553.17
+1210.623107: CPU Test: 1 Cumulative Total = 100599
+1210.623185: Running CPU Test: 2 on 16 Thread(s)
+1214.672548: PRIME TEST: Time Elapsed = 3.0165, Loops = 31, Primes/loop = 2063689
+1214.679878: PRIME TEST: Time Elapsed = 3.02411, Loops = 39, Primes/loop = 2063689
+1214.682729: PRIME TEST: Time Elapsed = 3.02172, Loops = 22, Primes/loop = 2063689
+1214.709378: PRIME TEST: Time Elapsed = 3.05371, Loops = 22, Primes/loop = 2063689
+1214.718142: PRIME TEST: Time Elapsed = 3.05715, Loops = 22, Primes/loop = 2063689
+1214.722554: PRIME TEST: Time Elapsed = 3.06403, Loops = 38, Primes/loop = 2063689
+1214.727450: PRIME TEST: Time Elapsed = 3.06905, Loops = 39, Primes/loop = 2063689
+1214.740828: PRIME TEST: Time Elapsed = 3.08308, Loops = 11, Primes/loop = 2063689
+1214.740903: PRIME TEST: Time Elapsed = 3.0796, Loops = 11, Primes/loop = 2063689
+1214.750815: PRIME TEST: Time Elapsed = 3.09555, Loops = 22, Primes/loop = 2063689
+1214.751550: PRIME TEST: Time Elapsed = 3.09089, Loops = 22, Primes/loop = 2063689
+1214.758474: PRIME TEST: Time Elapsed = 3.09816, Loops = 10, Primes/loop = 2063689
+1214.761801: PRIME TEST: Time Elapsed = 3.1067, Loops = 22, Primes/loop = 2063689
+1214.763898: PRIME TEST: Time Elapsed = 3.10345, Loops = 22, Primes/loop = 2063689
+1214.770273: PRIME TEST: Time Elapsed = 3.11197, Loops = 22, Primes/loop = 2063689
+1214.782905: PRIME TEST: Time Elapsed = 3.12629, Loops = 11, Primes/loop = 2063689
+1214.783102: Running CPU Test: [Primes Cross Platform] on 14 Thread(s)
+1218.823447: PRIME TEST: Time Elapsed = 3.0118, Loops = 39, Primes/loop = 2063689
+1218.826776: PRIME TEST: Time Elapsed = 3.01502, Loops = 39, Primes/loop = 2063689
+1218.843141: PRIME TEST: Time Elapsed = 3.02869, Loops = 23, Primes/loop = 2063689
+1218.871489: PRIME TEST: Time Elapsed = 3.05877, Loops = 13, Primes/loop = 2063689
+1218.871777: PRIME TEST: Time Elapsed = 3.06041, Loops = 13, Primes/loop = 2063689
+1218.880438: PRIME TEST: Time Elapsed = 3.06554, Loops = 23, Primes/loop = 2063689
+1218.880536: PRIME TEST: Time Elapsed = 3.06907, Loops = 40, Primes/loop = 2063689
+1218.886396: PRIME TEST: Time Elapsed = 3.07478, Loops = 40, Primes/loop = 2063689
+1218.895542: PRIME TEST: Time Elapsed = 3.08076, Loops = 23, Primes/loop = 2063689
+1218.896661: PRIME TEST: Time Elapsed = 3.08461, Loops = 23, Primes/loop = 2063689
+1218.904954: PRIME TEST: Time Elapsed = 3.09372, Loops = 23, Primes/loop = 2063689
+1218.915402: PRIME TEST: Time Elapsed = 3.1008, Loops = 23, Primes/loop = 2063689
+1218.916026: PRIME TEST: Time Elapsed = 3.10515, Loops = 23, Primes/loop = 2063689
+1218.918405: PRIME TEST: Time Elapsed = 3.10654, Loops = 23, Primes/loop = 2063689
+1218.918765: CPU Test: 2 Cumulative Total = 246.228
+1218.918826: Running CPU Test: 3 on 16 Thread(s)
+1222.979932: SORT TEST: Time Elapsed = 3.00906, Loops = 23Primes/s = 3.82179e+06
+1223.041353: SORT TEST: Time Elapsed = 3.04232, Loops = 16Primes/s = 2.62957e+06
+1223.043898: SORT TEST: Time Elapsed = 3.06329, Loops = 19Primes/s = 3.10124e+06
+1223.045458: SORT TEST: Time Elapsed = 3.06464, Loops = 19Primes/s = 3.09987e+06
+1223.047479: SORT TEST: Time Elapsed = 3.0587, Loops = 17Primes/s = 2.77896e+06
+1223.049097: SORT TEST: Time Elapsed = 3.06796, Loops = 19Primes/s = 3.09652e+06
+1223.050296: SORT TEST: Time Elapsed = 3.06969, Loops = 19Primes/s = 3.09478e+06
+1223.054404: SORT TEST: Time Elapsed = 3.07373, Loops = 19Primes/s = 3.0907e+06
+1223.055961: SORT TEST: Time Elapsed = 3.07514, Loops = 19Primes/s = 3.08929e+06
+1223.058996: SORT TEST: Time Elapsed = 3.07818, Loops = 19Primes/s = 3.08624e+06
+1223.063781: SORT TEST: Time Elapsed = 3.08318, Loops = 19Primes/s = 3.08123e+06
+1223.067766: SORT TEST: Time Elapsed = 3.08572, Loops = 18Primes/s = 2.91666e+06
+1223.105049: SORT TEST: Time Elapsed = 3.11726, Loops = 24Primes/s = 3.84954e+06
+1223.126648: SORT TEST: Time Elapsed = 3.13159, Loops = 17Primes/s = 2.71427e+06
+1223.144767: SORT TEST: Time Elapsed = 3.15635, Loops = 17Primes/s = 2.69298e+06
+1223.148295: SORT TEST: Time Elapsed = 3.17816, Loops = 24Primes/s = 3.77576e+06
+1223.148349: CPU Test: 3 Cumulative Total = 49919.4
+1223.148429: Running CPU Test: 4 on 16 Thread(s)
+1225.157457: AES Encrypted\Elapsed\Bps: 912261120 \ 1.00235 \ 9.10122e+08
+1225.157674: AES Encrypted\Elapsed\Bps: 1279262720 \ 1.00282 \ 1.27567e+09
+1225.157897: AES Encrypted\Elapsed\Bps: 1006632960 \ 1.00237 \ 1.00426e+09
+1225.159369: AES Encrypted\Elapsed\Bps: 1101004800 \ 1.00436 \ 1.09622e+09
+1225.159432: AES Encrypted\Elapsed\Bps: 1310720000 \ 1.00458 \ 1.30474e+09
+1225.159426: AES Encrypted\Elapsed\Bps: 1101004800 \ 1.00439 \ 1.09619e+09
+1225.159442: AES Encrypted\Elapsed\Bps: 1101004800 \ 1.00441 \ 1.09617e+09
+1225.159513: AES Encrypted\Elapsed\Bps: 933232640 \ 1.00403 \ 9.29482e+08
+1225.159813: AES Encrypted\Elapsed\Bps: 1027604480 \ 1.00476 \ 1.02274e+09
+1225.159831: AES Encrypted\Elapsed\Bps: 1268776960 \ 1.00498 \ 1.26249e+09
+1225.160211: AES Encrypted\Elapsed\Bps: 1101004800 \ 1.00518 \ 1.09533e+09
+1225.160383: AES Encrypted\Elapsed\Bps: 1101004800 \ 1.00533 \ 1.09516e+09
+1225.160967: AES Encrypted\Elapsed\Bps: 1101004800 \ 1.00592 \ 1.09453e+09
+1225.161072: AES Encrypted\Elapsed\Bps: 1289748480 \ 1.00622 \ 1.28178e+09
+1225.162404: AES Encrypted\Elapsed\Bps: 796917760 \ 1.00624 \ 7.91976e+08
+1225.171853: AES Encrypted\Elapsed\Bps: 943718400 \ 1.01638 \ 9.28513e+08
+1226.159073: SHA256 Hashed\Elapsed\Bps: 2506096640 \ 1.00004 \ 2.50601e+09
+1226.161576: SHA256 Hashed\Elapsed\Bps: 1866465280 \ 1.00169 \ 1.86332e+09
+1226.161722: SHA256 Hashed\Elapsed\Bps: 2936012800 \ 1.00094 \ 2.93326e+09
+1226.161904: SHA256 Hashed\Elapsed\Bps: 3040870400 \ 1.00072 \ 3.03867e+09
+1226.162402: SHA256 Hashed\Elapsed\Bps: 2516582400 \ 1.00136 \ 2.51316e+09
+1226.162405: SHA256 Hashed\Elapsed\Bps: 2443182080 \ 1.0006 \ 2.44172e+09
+1226.162607: SHA256 Hashed\Elapsed\Bps: 2516582400 \ 1.00159 \ 2.51257e+09
+1226.162645: SHA256 Hashed\Elapsed\Bps: 2516582400 \ 1.00172 \ 2.51225e+09
+1226.162903: SHA256 Hashed\Elapsed\Bps: 3030384640 \ 1.0039 \ 3.01861e+09
+1226.163785: SHA256 Hashed\Elapsed\Bps: 2380267520 \ 1.00237 \ 2.37463e+09
+1226.163902: SHA256 Hashed\Elapsed\Bps: 2516582400 \ 1.00191 \ 2.51179e+09
+1226.164400: SHA256 Hashed\Elapsed\Bps: 2516582400 \ 1.00184 \ 2.51196e+09
+1226.165408: SHA256 Hashed\Elapsed\Bps: 2044723200 \ 1.00397 \ 2.03664e+09
+1226.165967: SHA256 Hashed\Elapsed\Bps: 2275409920 \ 1.00163 \ 2.2717e+09
+1226.168939: SHA256 Hashed\Elapsed\Bps: 2621440000 \ 1.00649 \ 2.60453e+09
+1226.177856: SHA256 Hashed\Elapsed\Bps: 2233466880 \ 1.00407 \ 2.22441e+09
+1227.164262: ECDSA verified\Elapsed\Bps: 933232640 \ 1.00015 \ 9.33092e+08
+1227.165569: ECDSA verified\Elapsed\Bps: 1090519040 \ 1.00082 \ 1.08963e+09
+1227.165689: ECDSA verified\Elapsed\Bps: 1195376640 \ 1.00218 \ 1.19278e+09
+1227.166920: ECDSA verified\Elapsed\Bps: 1101004800 \ 1.00564 \ 1.09482e+09
+1227.167409: ECDSA verified\Elapsed\Bps: 912261120 \ 1.00135 \ 9.11035e+08
+1227.168734: ECDSA verified\Elapsed\Bps: 880803840 \ 1.00081 \ 8.80095e+08
+1227.169045: ECDSA verified\Elapsed\Bps: 1111490560 \ 1.0045 \ 1.10651e+09
+1227.169454: ECDSA verified\Elapsed\Bps: 1090519040 \ 1.00471 \ 1.0854e+09
+1227.170182: ECDSA verified\Elapsed\Bps: 1247805440 \ 1.00641 \ 1.23986e+09
+1227.170293: ECDSA verified\Elapsed\Bps: 1184890880 \ 1.00561 \ 1.17828e+09
+1227.171053: ECDSA verified\Elapsed\Bps: 1101004800 \ 1.00508 \ 1.09544e+09
+1227.171213: ECDSA verified\Elapsed\Bps: 1101004800 \ 1.00468 \ 1.09587e+09
+1227.171331: ECDSA verified\Elapsed\Bps: 1101004800 \ 1.00677 \ 1.0936e+09
+1227.173518: ECDSA verified\Elapsed\Bps: 933232640 \ 1.00515 \ 9.2845e+08
+1227.175309: ECDSA verified\Elapsed\Bps: 1059061760 \ 1.00457 \ 1.05424e+09
+1227.183934: ECDSA verified\Elapsed\Bps: 985661440 \ 1.00357 \ 9.8216e+08
+1227.184120: CPU Test: 4 Cumulative Total = 23562.7
+1227.184204: Running CPU Test: 5 on 16 Thread(s)
+1231.289406: NewCompressData: chars encoded = 5.87203e+07, time elapsed = 3.09865, total size = 38705674
+1231.303904: NewCompressData: chars encoded = 5.03316e+07, time elapsed = 3.11281, total size = 33176330
+1231.476472: NewCompressData: chars encoded = 5.87203e+07, time elapsed = 3.28556, total size = 38705674
+1231.479145: NewCompressData: chars encoded = 5.87203e+07, time elapsed = 3.28846, total size = 38705674
+1231.514241: NewCompressData: chars encoded = 5.03316e+07, time elapsed = 3.32292, total size = 33176330
+1231.525818: NewCompressData: chars encoded = 6.71089e+07, time elapsed = 3.33512, total size = 44235274
+1231.549032: NewCompressData: chars encoded = 5.03316e+07, time elapsed = 3.35809, total size = 33176330
+1231.558383: NewCompressData: chars encoded = 5.87203e+07, time elapsed = 3.36772, total size = 38705674
+1231.565701: NewCompressData: chars encoded = 5.87203e+07, time elapsed = 3.37497, total size = 38705674
+1231.570285: NewCompressData: chars encoded = 5.87203e+07, time elapsed = 3.37962, total size = 38705674
+1231.570867: NewCompressData: chars encoded = 5.03316e+07, time elapsed = 3.37642, total size = 33176330
+1231.573270: NewCompressData: chars encoded = 5.87203e+07, time elapsed = 3.38257, total size = 38705674
+1231.574092: NewCompressData: chars encoded = 5.87203e+07, time elapsed = 3.38335, total size = 38705674
+1231.576059: NewCompressData: chars encoded = 5.87203e+07, time elapsed = 3.38529, total size = 38705674
+1231.578797: NewCompressData: chars encoded = 5.87203e+07, time elapsed = 3.38808, total size = 38705674
+1231.595873: NewCompressData: chars encoded = 5.87203e+07, time elapsed = 3.40516, total size = 38705674
+1231.595997: CPU Test: 5 Cumulative Total = 268416
+1231.596087: Running CPU Test: 6 on 1 Thread(s)
+1233.598308: FLOAT TEST: Time Elapsed = 1, Operations = 9813912000MOps = 9813.91
+1234.679597: SORT TEST: Time Elapsed = 1.03465, Loops = 9Primes/s = 4.3493e+06
+1235.704728: NewCompressData: chars encoded = 3.35544e+07, time elapsed = 1.02502, total size = 22117642
+1235.704758: Single Thread: ResF = 5495.79, ResS = 1478.76, ResC = 6073.97
+1235.704781: CPU Test: 6 Cumulative Total = 4062.43
+1235.704854: Running CPU Test: 7 on 16 Thread(s)
+1239.858751: Physics Test: Frames per second = 277.742297
+1239.887154: Physics Test: Frames per second = 325.107442
+1239.910944: Physics Test: Frames per second = 319.221804
+1239.917914: Physics Test: Frames per second = 120.288351
+1239.925334: Physics Test: Frames per second = 136.287754
+1239.934319: Physics Test: Frames per second = 129.478181
+1239.956322: Physics Test: Frames per second = 136.526174
+1239.988479: Physics Test: Frames per second = 172.818225
+1240.001842: Physics Test: Frames per second = 171.659426
+1240.009327: Physics Test: Frames per second = 171.377782
+1240.012082: Physics Test: Frames per second = 170.434371
+1240.012651: Physics Test: Frames per second = 337.234043
+1240.020968: Physics Test: Frames per second = 170.757513
+1240.023827: Physics Test: Frames per second = 169.660704
+1240.033586: Physics Test: Frames per second = 169.307239
+1240.043788: Physics Test: Frames per second = 169.005691
+1240.043842: CPU Test: 7 Cumulative Total = 3146.91
+1240.043944: Running CPU Test: 8 on 16 Thread(s)
+1241.049067: Begin MM Test
+1241.049071: Begin MM Test
+1241.049076: Begin MM Test
+1241.049072: Begin MM Test
+1241.049076: Begin MM Test
+1241.049079: Begin MM Test
+1241.049079: Begin MM Test
+1241.049078: Begin MM Test
+1241.049073: Begin MM Test
+1241.049070: Begin MM Test
+1241.049075: Begin MM Test
+1241.049082: Begin MM Test
+1241.049134: Begin MM Test
+1241.049148: Begin MM Test
+1241.049117: Begin MM Test
+1241.049120: Begin MM Test
+1242.049326: Base MM test score = 190.646575
+1242.049358: Base MM test score = 207.034656
+1242.049379: Base MM test score = 196.329063
+1242.049379: Base MM test score = 211.527680
+1242.049413: Base MM test score = 195.526802
+1242.049418: Base MM test score = 184.824915
+1242.049431: Base MM test score = 186.073686
+1242.049473: Base MM test score = 196.611422
+1242.049475: Base MM test score = 192.567565
+1242.049483: Base MM test score = 196.559891
+1242.049487: Base MM test score = 196.408281
+1242.049508: Base MM test score = 196.508101
+1242.049552: Base MM test score = 155.994869
+1242.049607: Base MM test score = 167.577959
+1242.049676: Base MM test score = 177.313612
+1242.049701: Base MM test score = 188.456286
+1243.049879: SSE test score = 774.517589
+1243.049879: SSE test score = 764.188711
+1243.049909: SSE test score = 762.230116
+1243.049930: SSE test score = 640.975731
+1243.049937: SSE test score = 678.897501
+1243.049969: SSE test score = 678.184088
+1243.050036: SSE test score = 679.119611
+1243.050065: SSE test score = 678.491887
+1243.050067: SSE test score = 679.195594
+1243.050074: SSE test score = 678.533609
+1243.050076: SSE test score = 678.439701
+1243.050130: SSE test score = 678.215603
+1243.050314: SSE test score = 592.015631
+1243.050308: SSE test score = 635.976036
+1243.050365: SSE test score = 667.828390
+1243.053033: SSE test score = 560.121013
+1244.050007: FMA test score = 2134.338016
+1244.050027: FMA test score = 1834.179617
+1244.050037: FMA test score = 2124.543063
+1244.050041: FMA test score = 1416.822315
+1244.050068: FMA test score = 1416.557695
+1244.050116: FMA test score = 1412.745478
+1244.050145: FMA test score = 1416.480947
+1244.050161: FMA test score = 1412.311089
+1244.050172: FMA test score = 1412.502235
+1244.050172: FMA test score = 1411.556885
+1244.050221: FMA test score = 1411.767517
+1244.050489: FMA test score = 1342.398549
+1244.050489: FMA test score = 1250.290038
+1244.052029: FMA test score = 2039.490290
+1244.052028: FMA test score = 1099.596735
+1244.055029: FMA test score = 1267.789700
+1245.050136: AVX test score = 891.237321
+1245.050140: AVX test score = 1114.537061
+1245.050143: AVX test score = 1807.635895
+1245.050158: AVX test score = 890.576358
+1245.050217: AVX test score = 1659.126912
+1245.050242: AVX test score = 890.720666
+1245.050242: AVX test score = 890.222121
+1245.050251: AVX test score = 890.736103
+1245.050273: AVX test score = 790.820313
+1245.050325: AVX test score = 890.415333
+1245.050682: AVX test score = 734.138180
+1245.050888: AVX test score = 769.416384
+1245.051047: AVX test score = 864.394910
+1245.052156: AVX test score = 732.749456
+1245.052190: AVX test score = 832.261660
+1245.055157: AVX test score = 1155.071696
+1245.055458: CPU Test: 8 Cumulative Total = 17011.5
