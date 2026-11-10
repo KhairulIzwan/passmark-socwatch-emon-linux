@@ -32,6 +32,11 @@ Short duration, 3 iterations, all 16 processes) with EMON + SoC Watch running.
 Date: 2026-11-04. `-w` is the `powerprofilesctl` profile; `-g` is the CPU
 governor (`as-is` = left at `powersave`).
 
+An additional one-iteration capture was collected on 2026-11-10 with
+`./run_combined_test.sh -d Short -i 1 -p 16 -r All -w balanced -g powersave`.
+It is listed separately below and is not included in the November 4 three-
+iteration configuration averages.
+
 ## Results
 
 | Run | `-w` profile | Governor | CPU Mark | Memory Mark | Avg pkg power | Avg active freq | instructions/ref cycle |
@@ -43,6 +48,12 @@ governor (`as-is` = left at `powersave`).
 | 20261104_081132 | performance | performance | 29867 | 3775 | 21.7 W | 2933 MHz | 1.58 |
 | 20261104_082458 | performance | performance | 29903 | 3758 | 21.7 W | 2935 MHz | 1.58 |
 | 20261104_073659 | power-saver | powersave * | 14610 | 1512 | 5.6 W | 1234 MHz | 0.70 |
+| 20261110_084903 | balanced | powersave | 30651 | 3511 | 24.3 W | 3070 MHz | 1.86 |
+
+The November 10 Balanced row is one capture with one iteration; it should not
+be treated as a repeatability estimate or mixed into the November 4 averages.
+The SoC Watch log reports unsupported-feature warnings, although its output
+contains power and frequency summaries.
 
 \* Governor was not recorded for these two runs (made before the script
 captured it); it was `powersave`, confirmed by switching the profiles
